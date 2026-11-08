@@ -1,0 +1,16 @@
+name: RealisticWorld
+version: '${version}'
+main: dev.realisticworld.RealisticWorldPlugin
+api-version: '26.3'
+load: STARTUP
+description: Realistic terrain generation with tall mountains, climate-based biomes, lakes and detailed deserts.
+commands:
+  realisticworld:
+    description: RealisticWorld commands
+    usage: /<command> <create|info|tp|locate|preview|mountain|version>
+    aliases: [rw]
+    permission: realisticworld.admin
+permissions:
+  realisticworld.admin:
+    description: Allows all /realisticworld subcommands
+    default: op

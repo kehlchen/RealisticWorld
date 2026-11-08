@@ -1,0 +1,251 @@
+# RealisticWorld configuration
+# Terrain options only affect chunks that are generated after the change.
+# Delete the world folder (or use a new world) to see changes in already explored areas.
+config-version: 8
+
+# Vanilla structures (villages, temples, fortresses, end cities, ...) in all custom dimensions.
+# Placement uses the height of the custom terrain.
+structures: true
+
+default-world:
+  # Binds the main world (level-name from server.properties) to this plugin via bukkit.yml.
+  enabled: true
+  nether: true     # <level-name>_nether uses the custom nether generator (needs nether.enabled)
+  end: true        # <level-name>_the_end uses the custom end generator (needs end.enabled)
+
+world-height:
+  # Writes a data pack into the main world folder that overrides the overworld height.
+  # Only use this for NEW worlds. Existing overworlds must not change their height.
+  # The vanilla dimension type is read from the server jars. If that fails, copy
+  # data/minecraft/dimension_type/overworld.json and pack.mcmeta from a vanilla server jar into
+  # plugins/RealisticWorld/vanilla/ (same relative paths) and restart.
+  enabled: true
+  min-y: -64
+  height: 576        # top block = min-y + height - 1; multiples of 16
+
+overworld:
+  sea-level: 63
+
+  terrain:
+    horizontal-scale: 1.0     # >1 stretches all features horizontally
+    continent-size: 1.0       # >1 larger continents and oceans
+    land-bias: 0.0            # -0.3 more ocean, +0.3 more land (range -0.6 to 0.6)
+    hill-intensity: 1.0       # height of rolling hills
+    mountain-height: 300      # maximum height above sea level; capped by world height
+    mountain-intensity: 1.0   # scales mountain height
+    mountain-coverage: 1.0    # share of land that is mountainous (0.2 to 2.5)
+    river-width: 1.0
+    river-scale: 1.0          # >1 rivers further apart
+
+  climate:
+    # Size of the climate based biome regions (forests, deserts, taigas, ...):
+    # small, medium, large, extreme (German names klein, mittel, gross, extrem also work).
+    # Coastlines, rivers and mountains are not affected; use continent-size, horizontal-scale and
+    # the mountain options for those.
+    biome-size: medium
+    scale: 1.0                # fine tuning multiplier on top of biome-size
+    temperature-bias: 0.0     # -1 colder ... +1 hotter
+    humidity-bias: 0.0        # -1 drier ... +1 wetter
+
+  biomes:
+    # Relative spawn weight of every biome. 1.0 = default, 0.5 = half as common, 2.0 = twice as common,
+    # 0 = never. Weights only shift the share between biomes that fit the same climate and height;
+    # a biome cannot appear outside its climate range. Examples: taiga: 0.3 makes spruce forests rare,
+    # forest: 2.0 gives more forests. Biomes without alternatives (rivers, beaches, shores) are only
+    # switched on or off. Cave biomes: higher = larger cave biome areas.
+    weights:
+      # oceans and water
+      ocean: 1.0
+      deep_ocean: 1.0
+      warm_ocean: 1.0
+      lukewarm_ocean: 1.0
+      deep_lukewarm_ocean: 1.0
+      cold_ocean: 1.0
+      deep_cold_ocean: 1.0
+      frozen_ocean: 1.0
+      deep_frozen_ocean: 1.0
+      river: 1.0
+      frozen_river: 1.0
+      # coasts
+      beach: 1.0
+      snowy_beach: 1.0
+      stony_shore: 1.0
+      # hot and dry
+      desert: 1.0
+      badlands: 1.0
+      eroded_badlands: 1.0
+      wooded_badlands: 1.0
+      savanna: 1.0
+      savanna_plateau: 1.0
+      windswept_savanna: 1.0
+      # temperate
+      plains: 1.0
+      sunflower_plains: 1.0
+      forest: 1.0
+      flower_forest: 1.0
+      birch_forest: 1.0
+      old_growth_birch_forest: 1.0
+      dark_forest: 1.0
+      swamp: 1.0
+      # cold
+      taiga: 1.0
+      old_growth_pine_taiga: 1.0
+      old_growth_spruce_taiga: 1.0
+      snowy_taiga: 1.0
+      snowy_plains: 1.0
+      ice_spikes: 1.0
+      # tropical
+      jungle: 1.0
+      sparse_jungle: 1.0
+      bamboo_jungle: 1.0
+      mangrove_swamp: 1.0
+      # mountains
+      meadow: 1.0
+      cherry_grove: 1.0
+      grove: 1.0
+      snowy_slopes: 1.0
+      jagged_peaks: 1.0
+      frozen_peaks: 1.0
+      stony_peaks: 1.0
+      windswept_hills: 1.0
+      windswept_forest: 1.0
+      windswept_gravelly_hills: 1.0
+      # caves
+      lush_caves: 1.0
+      dripstone_caves: 1.0
+
+  lakes:
+    # Inland lakes in low, flat land. They are filled up to sea level, use the river biome and get gravel/sand banks.
+    # Lakes do not appear in mountains, deserts or right at the coast.
+    enabled: true
+    amount: 1.0               # 0 = none, 2 = about twice as many (range 0 to 3)
+    size: 1.0                 # >1 larger lakes (range 0.3 to 4)
+    depth: 9                  # maximum depth below sea level (3 to 24)
+
+  stronghold-mountains:
+    # Over some strongholds the terrain is replaced by a mountain landscape: a small mountain in the middle
+    # (above the stronghold's starter staircase), larger massifs around it, taiga in the valleys, a small lake.
+    # Bare rock above the tree line, snow and peaks higher up. No other vanilla structures start inside it.
+    # Only chunks that are generated after the stronghold was found get the mountains.
+    enabled: true
+    chance-percent: 30        # chance per stronghold, 0 to 100 (decided once per stronghold from the world seed)
+    size: 1.0                 # scales the whole layout (0.4 to 3); 1.0 = about 290 blocks radius
+    peak-min-y: 100           # absolute Y of the lowest peaks (the small middle mountain)
+    peak-max-y: 150           # absolute Y of the highest peaks
+    valley-y: 68              # height of the valley floor (default: sea level + 5)
+    treeline-y: 98            # taiga (trees) below this height, bare rock above
+    snow-line-y: 122          # snowy slopes above this height, frozen and jagged peaks 14 blocks higher
+    edge-blend: 80            # blocks over which the landscape fades into the normal terrain
+    structure-margin: 32      # extra distance around the landscape where no other structure may start
+    random-rotation: false    # true: every site is rotated by a multiple of 90 degrees and maybe mirrored
+    scan-radius: 12000        # how far around the world origin strongholds are looked up (blocks)
+
+  desert:
+    dunes: true
+    dune-height: 1.0
+
+  caves:
+    # Own cave system. Vanilla carvers are not used because their aquifers do not match this terrain.
+    enabled: true
+    density: 1.0              # 0 = no caves, 2 = twice as many
+    sinkholes: true           # rare vertical shafts from the surface
+    lava-level: -54           # cave air at or below this height becomes lava
+
+  magma-vents:
+    # Small clusters of magma blocks on deep cave floors with lava directly below.
+    enabled: true
+    chance: 0.5               # 0 to 1, relative amount
+    min-depth: 1              # lava blocks under each magma block
+    max-depth: 2
+
+  features:
+    boulders: true            # boulders and rock formations in many biomes
+    hoodoos: true             # sandstone/terracotta towers, karst towers, sea stacks
+    biome-extras: true        # master switch for the biome specific features below
+    remove-vanilla-lava: true # removes vanilla lava lakes above y -40 (they ignore biomes and height)
+    ponds: true
+    fallen-logs: true
+    flower-patches: true      # also moss, petals and mushroom patches
+    snow-drifts: true
+    reefs-and-icebergs: true
+    cave-features: true       # clay pools in lush caves, dripstone mounds
+    oases: true               # rare ponds with palms on flat desert ground
+    rock-arches: true         # sandstone and terracotta arches in deserts and badlands
+
+nether:
+  enabled: true
+  lava-level: 32
+  floor-height: 34            # average floor height
+  ceiling-height: 108         # average ceiling height (bedrock roof stays at 123-127)
+  canyon-depth: 26            # how deep canyons cut into the floor
+  pillar-amount: 1.0          # full height pillars, 0 = none
+  island-amount: 1.0          # floating islands, 0 = none
+  biome-size: medium          # small, medium, large, extreme
+  biome-scale: 1.0            # fine tuning multiplier on top of biome-size
+
+  biomes:
+    # Relative spawn weight, 1.0 = default, 0 = never.
+    weights:
+      nether_wastes: 1.0
+      soul_sand_valley: 1.0
+      crimson_forest: 1.0
+      warped_forest: 1.0
+      basalt_deltas: 1.0
+
+  magma-lava:
+    # Magma blocks get lava directly below them (good for finding lava quickly).
+    enabled: true
+    patches: 0.5              # 0 to 1: extra magma patches on floors in wastes and basalt deltas
+    min-depth: 1
+    max-depth: 2
+
+  features:
+    basalt-spires: true
+    ruined-pillars: true
+    bone-ribs: true
+    nylium-boulders: true
+
+end:
+  enabled: true
+  # The main island (dragon fight) and everything closer to the centre than main-island.radius + 100 blocks
+  # are never changed by the options below. Everything further out is divided into zones with their own
+  # terrain, surface and features.
+  # The game only knows the vanilla End biomes, so every zone reports one of them (F3 shows the vanilla name,
+  # /rw info shows the zone). Mobs, chorus plants and end cities follow that vanilla biome.
+  # false = outside the main island the End is generated as before the zones existed.
+  custom-biomes: true
+  biome-size: medium          # size of the zones: small, medium, large, extreme
+  biome-scale: 1.0            # fine tuning multiplier on top of biome-size
+  main-island:
+    radius: 90
+    height: 64                # surface height at the centre
+  outer-islands:
+    start-distance: 700       # distance from the centre where the large outer islands begin
+    amount: 1.0               # 0 = no outer islands
+  biomes:
+    # Relative spawn weight of every zone, 1.0 = default, 0.5 = half as common, 2.0 = twice as common, 0 = never.
+    # The four classic zones keep the plain terrain of the previous version (vanilla host biome of the same name).
+    # Host biomes: chorus_forest and crystal_fields = end_midlands, purpur_ruins = end_highlands,
+    # obsidian_wastes and ender_dunes = end_barrens, void_rifts = small_end_islands.
+    # End cities need end_highlands or end_midlands on the core of a large island.
+    weights:
+      # classic
+      end_highlands: 1.0
+      end_midlands: 1.0
+      end_barrens: 1.0
+      small_end_islands: 1.0
+      # new
+      chorus_forest: 1.0      # flat ground with dense chorus plants
+      crystal_fields: 1.0     # amethyst and calcite ground, crystal spires
+      obsidian_wastes: 1.0    # jagged obsidian ridges with crying obsidian and obsidian spires
+      ender_dunes: 1.0        # rippled dunes of end stone and calcite, dragon ribs
+      purpur_ruins: 1.0       # terraced plateaus with end stone bricks and broken purpur colonnades
+      void_rifts: 1.0         # narrow rifts through the islands with obsidian rims
+  features:
+    chorus-groves: true
+    crystal-spires: true
+    obsidian-spires: true
+    purpur-ruins: true
+    bone-ribs: true
+  shards: true                # small floating end stone shards
+  hanging-spikes: 1.0         # length of spikes under islands
